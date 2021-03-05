@@ -1,19 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\Language;
 use Illuminate\Http\Request;
-use App\Models\Category;
-use App\Models\Meal;
-use Illuminate\Support\Facades\App;
-
 class DashboardController extends Controller
 {
     public function index()
-    {      
-
-
+    {   
         return view('dash.index');
     }
 
@@ -23,6 +15,14 @@ class DashboardController extends Controller
             $this->validate($request,[
                 'tag_id' => [
                     'regex:/^\d+(((,\d+)?,\d+)?,\d+)?$/', //regex pattern za provjeru stringova odvojenih zarezom, dopusten i jedan string 
+                ],
+              
+            ]);
+        }
+        if($request->timestamp){
+            $this->validate($request, [
+                'timestamp' => [
+                    'integer'
                 ]
             ]);
         }
@@ -40,7 +40,7 @@ class DashboardController extends Controller
         else $with_builder = rtrim($with_builder, ','); //ako postoji, trimaj trailing comma 
 
 
-        return redirect()->route('meals', array('lang' => $request->lang, 'per_page'=> $request->per_page, $with_builder , 'category' => $category_id, 'tags'=>$request->tag_id, 'page' => $request->page));
+        return redirect()->route('meals', array('lang' => $request->lang, 'per_page'=> $request->per_page, $with_builder , 'category' => $category_id, 'tags'=>$request->tag_id, 'page' => $request->page, 'diff_time' => $request->timestamp));
     }
 
     /*

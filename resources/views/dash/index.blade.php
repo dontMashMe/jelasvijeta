@@ -34,7 +34,6 @@
                     </label>
                 </div>
                 <div class="mb-4">
-                    <label for="category_id" class="sr-only">ID</label>
                     <input type="number" name="category_id" id="category_id" placeholder="Category id" class="bg-gray-100 border-Z p-4 rounded-lg" value="">
                     <span class="ml-2">NULL</span>
                     <input type="checkbox" class="form-checkbox" name="category_null" id="category_null">
@@ -54,6 +53,14 @@
                 <div class="flex mt-6 mb-6">
                     <input type="number" name="per_page" id="per_page" placeholder="Per page" class="bg-gray-100 border-Z p-2 rounded-lg" value="">
                     <input type="number" name="page" id="page" placeholder="Page" class="bg-gray-100 border-Z p-2 rounded-lg ml-2" value="">
+                </div>
+                <div class="flex mt-6 mb-6">
+                    <input type="number" name="timestamp" id="timestamp" placeholder="UNIX timestamp" class="bg-gray-100 border-Z p-2 rounded-lg" value="">
+                    @error('timestamp')
+                        <div class="text-red-500 mt-2 text-sm">
+                                {{$message}} 
+                        </div>
+                    @enderror
                 </div>
                 <div>
                     <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded font-medium">Pretraži</button>

@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Meal;
+use DateTime;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\App;
-
+use Illuminate\Support\Carbon;
         /*
         primjer prevođenja jela na hr jezik 
 
@@ -33,6 +34,17 @@ class MealsController extends Controller
         }
         App::setLocale($request->lang);
         $meals = "";
+
+        if($request->diff_time)
+        {
+            $diffDate = new DateTime();
+            $diffDate->setTimestamp($request->diff_time);
+            $meals = Meal::withTrashed()
+                ->where('created_at','>',$diffDate)
+                ->orWhere('updated_at', '>', $diffDate)
+                ->orWhere('deleted_at', '>', $diffDate);
+        }
+
         /* 
         prvo provjeri stanje category parametra 
         parametar ima 4 stanja: 
@@ -65,7 +77,6 @@ class MealsController extends Controller
                     abort(404);     
             }    
         } 
-
         /*
         prvo provjeri postoji li 'with' parametar u url queryu
         ako postoji:
@@ -152,15 +163,37 @@ class MealsController extends Controller
         */
         if($request->per_page || $request->page)
         {
-    
             $default_per_page = $request->per_page ? $request->per_page : 10; //ukoliko per_page nije zadan postavi default 10 rezultata po stranici, inace postavi na zadanu vrijednost iz url
             $default_page = $request->page ? $request->page : 1; //ukoliko page nije zadan postavi default prvu stranicu, inace postavi na zadanu vrijednost iz url
 
             $collection = collect($meals); 
             $meals = $collection->forPage($default_page, $default_per_page); //??magic
-         
+    
         }
+
+        //appendaj 'status' atribut u response objekt. 
+        //stavio sam na kraj kako bi izbjegao provjeru za elemente koji će ionaki biti isfiltrirani van
+        if($request->diff_time)
+        {
+            foreach($meals as $meal)
+            {
+                if(($meal->updated_at > $request->diff_time) && ($meal->updated_at > $meal->created_at))
+                {
+                    $meal->setAttribute('status', 'modified');
+                }
+                else if($meal->deleted_at > $request->diff_time)
+                {
+                    $meal->setAttribute('status', 'deleted');
+                }
+                else
+                {
+                    $meal->setAttribute('status', 'created');
+                }
+            }
+        }
+
         
+
         echo "<pre>".json_encode($meals, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."</pre>";
     }
 

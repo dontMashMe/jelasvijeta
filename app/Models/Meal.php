@@ -7,15 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Ingredient;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Meal extends Model implements TranslatableContract
 {
     use HasFactory;
     use Translatable;
+    use SoftDeletes;
     
     public $translatedAttributes = ['title', 'description'];
-    protected $hidden = array('translations'); //sakri translations iz collection objekta.
-
+    protected $hidden = array('translations', 'created_at', 'updated_at', 'deleted_at'); //sakri 
 
     public function ingredients()
     {
