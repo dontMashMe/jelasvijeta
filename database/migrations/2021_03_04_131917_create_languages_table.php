@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RenameCategory extends Migration
+class CreateLanguagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,10 @@ class RenameCategory extends Migration
      */
     public function up()
     {
-        Schema::rename('category', 'categories');
+        Schema::create('languages', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('lang');
+        });
     }
 
     /**
@@ -23,6 +26,6 @@ class RenameCategory extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('languages');
     }
 }

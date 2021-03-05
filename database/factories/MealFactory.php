@@ -4,6 +4,8 @@ namespace Database\Factories;
 
 use App\Models\Meal;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Language;
+use App\Models\Category;
 
 class MealFactory extends Factory
 {
@@ -21,12 +23,24 @@ class MealFactory extends Factory
      */
     public function definition()
     {
+        static $counter = 1;
+        $locales = Language::pluck('lang');
+        $categories = Category::all();
+        $category = $categories->random()->id;
+        
+        $p = rand(0, 99);
+        $data = array(
+            'category_id' => $p>25 ? $category : NULL, //75% sanse da ima kategoriju ,
+            'status' => 'created'
+        );
+        foreach($locales as $locale){
+            $data[$locale] = [
+                'title' => 'Naslov jela '.$counter.' na '.$locale.' jeziku',
+                'description' => 'Opis jela '.$counter.' na '.$locale.' jeziku'
+            ];
+        }
+        $counter++;
 
-        return [
-            'title' => $this->faker->company,
-            'description' => ucwords($this->faker->catchPhrase .' '.$this->faker->bs),
-            'category_id' => $this->faker->boolean(85) ? mt_rand(1, 50) : null, //85% šanse da generira ID, 15% za NULL 
-            'status' => $this->faker->randomElement(['created', 'deleted'])
-        ];
+        return $data;
     }
 }

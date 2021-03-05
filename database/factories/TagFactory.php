@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Tag;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Language;
 
 class TagFactory extends Factory
 {
@@ -21,8 +22,15 @@ class TagFactory extends Factory
      */
     public function definition()
     {
-        return [
-            'title' => $this->faker->address
-        ];
+        static $counter = 1; //counter bi se ponovno settao na 1 bez keyword static
+        $languages = Language::pluck('lang');
+        $data = array();
+        foreach($languages as $lang){
+            $data[$lang] = [
+                'title' => 'Tag '.$counter.' na '.$lang.' jeziku.'
+            ];
+        }
+        $counter++;
+        return $data;
     }
 }

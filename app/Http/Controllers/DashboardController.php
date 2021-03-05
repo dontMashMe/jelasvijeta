@@ -1,12 +1,19 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Language;
 use Illuminate\Http\Request;
+use App\Models\Category;
+use App\Models\Meal;
+use Illuminate\Support\Facades\App;
 
 class DashboardController extends Controller
 {
     public function index()
-    {       
+    {      
+
+
         return view('dash.index');
     }
 
@@ -33,7 +40,7 @@ class DashboardController extends Controller
         else $with_builder = rtrim($with_builder, ','); //ako postoji, trimaj trailing comma 
 
 
-        return redirect()->route('meals', array('per_page'=> $request->per_page, $with_builder , 'category' => $category_id, 'tags'=>$request->tag_id, 'page' => $request->page));
+        return redirect()->route('meals', array('lang' => $request->lang, 'per_page'=> $request->per_page, $with_builder , 'category' => $category_id, 'tags'=>$request->tag_id, 'page' => $request->page));
     }
 
     /*

@@ -8,11 +8,26 @@ use App\Models\Meal;
 use \Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
+        /*
+        primjer prevođenja jela na hr jezik 
+
+        $hr = Language::first();
+        App::setLocale($hr->lang);
+        $meal = Meal::first();
+        dd($meal->title);
+
+        atomic/translatable sam preko indexa i localea povlaci povezane stupce iz translated tablice 
+        sve sto mi trebamo napraviti je postaviti locale preko App:setLocale() metode.
+        
+        */
 
 class MealsController extends Controller
 {
     public function index(Request $request)
     {
+
+        
+
         $meals = "";
         /* 
         prvo provjeri stanje category parametra 
@@ -94,7 +109,7 @@ class MealsController extends Controller
         }
 
         /*
-        
+
         provjeri postoji li tag parametar
         ako postoji:
 
