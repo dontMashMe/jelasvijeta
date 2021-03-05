@@ -30,7 +30,7 @@ lang= HR|ENG|DE
 //Route::get('/with=ingredients={ingredients?}&category={category?}&tags={tags?}', [MealsController::class, 'index'])->name('meals')->middleware(TrimStrings::class);
 Route::get('/meals', [MealsController::class, 'index'])->name('meals');
 
-Route::get('/dash', [DashboardController::class, 'index'])->name('dash');
+Route::get('/', [DashboardController::class, 'index'])->name('dash');
 Route::post('/', [DashboardController::class, 'store'])->name('dash.store');
 
 //Route::get('/', [MealsController::class, ''])
