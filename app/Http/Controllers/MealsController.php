@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Meal;
-use \Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\App;
 
         /*
         primjer prevođenja jela na hr jezik 
@@ -25,9 +25,13 @@ class MealsController extends Controller
 {
     public function index(Request $request)
     {
-
-        
-
+        //lang je obavezan parametar, uvijek se prosljeđuje. 
+        //ako ga nema baci 404
+        if(!$request->lang)
+        {
+            abort(404);
+        }
+        App::setLocale($request->lang);
         $meals = "";
         /* 
         prvo provjeri stanje category parametra 
@@ -39,29 +43,30 @@ class MealsController extends Controller
 
         switch blok provjerava prva 3 stanja. 
         4. stanje hvata prvi if blok (parametar nije zadan -> kategorija nije bitna)
-        
         */
         if(!$request->category)
         {
-            $meals = Meal::select('id', 'title', 'description', 'status', 'created_at', 'updated_at', 'category_id')->get();
+            $meals = Meal::get();
         }
         else
         {
             switch($request->category) 
             {
                 case "NULL":
-                    $meals = Meal::select('id', 'title', 'description', 'status', 'created_at', 'updated_at', 'category_id')->where('category_id', '=', NULL)->get();
+                    $meals = Meal::where('category_id', '=', NULL)->get();
                     break;
                 case "!NULL":
-                    $meals = Meal::select('id', 'title', 'description', 'status', 'created_at', 'updated_at', 'category_id')->get();
+                    $meals = Meal::whereNotNull('category_id')->get();
                     break;
-                default: //broj 
-                    $meals = Meal::select('id', 'title', 'description', 'status', 'created_at', 'updated_at', 'category_id')->where('category_id', '=', $request->category)->get();
-                    break;                    
+                case is_numeric($request->category): //broj 
+                    $meals = Meal::where('category_id', '=', $request->category)->get();
+                    break;               
+                default: //bad parameter 
+                    abort(404);     
             }    
-        }       
-        /*
+        } 
 
+        /*
         prvo provjeri postoji li 'with' parametar u url queryu
         ako postoji:
 
@@ -140,14 +145,10 @@ class MealsController extends Controller
         }
 
         /*
-        
         provjeri postoji li parametar per_page ili page 
         ako postoji ijedan:
-
         ukoliko jedan od parametar nije zadan, postavi mu default vrijednost 
         pretvori array u kolekciju koja se paginira sa laravelom forPage funkcijom 
-
-        
         */
         if($request->per_page || $request->page)
         {
@@ -159,6 +160,7 @@ class MealsController extends Controller
             $meals = $collection->forPage($default_page, $default_per_page); //??magic
          
         }
+        
         echo "<pre>".json_encode($meals, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."</pre>";
     }
 

@@ -14,6 +14,7 @@ class Category extends Model implements TranslatableContract
 
     public $translatedAttributes = ['title'];
     public $timestamps = false;
+    protected $hidden = array('translations'); //sakri translations iz collection objekta.
 
     
 }

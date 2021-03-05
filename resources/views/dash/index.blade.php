@@ -13,7 +13,6 @@
                       <option disabled>Odaberi jezik</option>
                       <option value="hr">Hrvatski</option>
                       <option value="en">English</option>
-                      <option value="fr">Francois</option>
                     </select>
                   </div>
                 <div class="flex mt-6 mb-6">

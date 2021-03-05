@@ -13,7 +13,7 @@ class Tag extends Model implements TranslatableContract
     use Translatable;
     public $timestamps = false;
     public $translatedAttributes = ['title'];
-    protected $hidden = array('pivot');
+    protected $hidden = array('pivot', 'translations');
 
 
     public function meals()

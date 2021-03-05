@@ -14,6 +14,8 @@ class Meal extends Model implements TranslatableContract
     use Translatable;
     
     public $translatedAttributes = ['title', 'description'];
+    protected $hidden = array('translations'); //sakri translations iz collection objekta.
+
 
     public function ingredients()
     {

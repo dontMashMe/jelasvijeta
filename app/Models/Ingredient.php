@@ -13,7 +13,7 @@ class Ingredient extends Model implements TranslatableContract
     use HasFactory;
     use Translatable;
     public $timestamps = false;
-    protected $hidden = array('pivot'); 
+    protected $hidden = array('pivot', 'translations'); 
     public $translatedAttributes = ['title'];
 
     public function meals()
